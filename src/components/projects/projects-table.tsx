@@ -38,7 +38,7 @@ export function ProjectsTable({ projects }: ProjectsTableProps) {
             <TableRow key={project.id}>
               <TableCell className="font-medium">{project.title}</TableCell>
               <TableCell>
-                <Badge variant={project.isActive ? "success" : "secondary"}>
+                <Badge variant={project.isActive ? "warning" : "secondary"}>
                   {project.isActive ? "Actif" : "Inactif"}
                 </Badge>
               </TableCell>
