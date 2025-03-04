@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/button"
 import {
   Table,
   TableBody,
@@ -7,9 +8,8 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { Project } from "@prisma/client"
-import { formatDate } from "@/lib/utils"
-import { Badge } from "@/components/ui/badge"
-import { formatEuro } from "@/lib/utils"
+import Link from "next/link"
+import { ProjectTableRow } from "./project-table-row"
 
 interface ProjectsTableProps {
   projects: (Project & {
@@ -21,7 +21,7 @@ interface ProjectsTableProps {
 
 export function ProjectsTable({ projects }: ProjectsTableProps) {
   return (
-    <div className="rounded-md border">
+    <div className="space-y-6">
       <Table>
         <TableHeader>
           <TableRow>
@@ -31,25 +31,21 @@ export function ProjectsTable({ projects }: ProjectsTableProps) {
             <TableHead>Collecté</TableHead>
             <TableHead>Dons</TableHead>
             <TableHead>Créé le</TableHead>
+            <TableHead className="w-[100px]">Actions</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {projects.map((project) => (
-            <TableRow key={project.id}>
-              <TableCell className="font-medium">{project.title}</TableCell>
-              <TableCell>
-                <Badge variant={project.isActive ? "warning" : "secondary"}>
-                  {project.isActive ? "Actif" : "Inactif"}
-                </Badge>
-              </TableCell>
-              <TableCell>{formatEuro(project.targetAmount)}</TableCell>
-              <TableCell>{formatEuro(project.raisedAmount)}</TableCell>
-              <TableCell>{project._count.donations}</TableCell>
-              <TableCell>{formatDate(project.createdAt)}</TableCell>
-            </TableRow>
+            <ProjectTableRow key={project.id} project={project} />
           ))}
         </TableBody>
       </Table>
+      
+      <div className="flex justify-center">
+        <Button asChild>
+          <Link href="/admin/projects/new">Créer un nouveau projet</Link>
+        </Button>
+      </div>
     </div>
   )
 }

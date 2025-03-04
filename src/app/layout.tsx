@@ -1,34 +1,32 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Inter } from "next/font/google";
 import "./globals.css";
+import { Header } from "@/components/header";
 import { Providers } from "./providers";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const inter = Inter({
   subsets: ["latin"],
 });
 
 export const metadata: Metadata = {
-  title: "La Cagnotte des Mômes",
-  description: "Plateforme de financement des projets de l'APE",
+  title: "APE Les Mômes - Cagnotte en ligne",
+  description: "Plateforme de financement participatif pour les projets de l'APE Les Mômes de l'école de Vair-sur-Loire",
 };
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
     <html lang="fr">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        <Providers>{children}</Providers>
+      <body className={inter.className}>
+        <Providers>
+          <Header />
+          <main className="px-4 md:px-0">
+            {children}
+          </main>
+        </Providers>
       </body>
     </html>
   );
