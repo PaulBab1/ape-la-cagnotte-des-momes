@@ -2,7 +2,7 @@ import NextAuth from 'next-auth'
 import Google from 'next-auth/providers/google'
 
 // Liste des emails autorisés pour l'accès administrateur
-const AUTHORIZED_EMAILS = [
+const AUTHORIZED_EMAILS: string[] = [
   // TODO: Ajouter les emails des administrateurs
 ]
 
@@ -27,7 +27,7 @@ export const {
       // Vérifier si l'email est autorisé
       return AUTHORIZED_EMAILS.includes(user.email?.toLowerCase() ?? '')
     },
-    async session({ session, token }) {
+    async session({ session }) {
       if (session.user) {
         session.user.isAdmin = AUTHORIZED_EMAILS.includes(session.user.email?.toLowerCase() ?? '')
       }

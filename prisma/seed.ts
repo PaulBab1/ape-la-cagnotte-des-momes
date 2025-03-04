@@ -6,7 +6,7 @@ const prisma = new PrismaClient()
 async function main() {
   // Création de l'utilisateur admin
   const adminPassword = 'APE@SuperSecure2024!'
-  const hashedPassword = await bcrypt.hash(adminPassword, 12)
+  const hashedPassword = await bcrypt.hash(adminPassword, 10)
   
   const admin = await prisma.user.upsert({
     where: { username: 'admin' },
@@ -25,11 +25,10 @@ async function main() {
     update: {},
     create: {
       id: 'test-project',
-      title: 'Sortie scolaire au Zoo',
-      description: 'Financement de la sortie scolaire au zoo pour les classes de CE1 et CE2. Les enfants pourront découvrir les animaux et participer à des ateliers pédagogiques.',
-      imageUrl: 'https://images.unsplash.com/photo-1503919005314-c3e766db4b1e?q=80&w=1200',
-      targetAmount: 1000,
-      raisedAmount: 450,
+      title: 'Sortie au Zoo de Beauval',
+      description: 'Aidez-nous à financer la sortie scolaire au Zoo de Beauval pour les classes de CE1 et CE2.',
+      targetAmount: 1500,
+      raisedAmount: 0,
       isActive: true,
     },
   })

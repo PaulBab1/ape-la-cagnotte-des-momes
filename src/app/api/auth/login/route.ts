@@ -32,7 +32,8 @@ export async function POST(request: Request) {
     }
 
     // Stocker la session dans un cookie
-    cookies().set('session', JSON.stringify(sessionData), {
+    const cookieStore = await cookies()
+    cookieStore.set('session', JSON.stringify(sessionData), {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',

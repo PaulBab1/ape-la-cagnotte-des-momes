@@ -1,4 +1,4 @@
-import { ProgressCard } from '@/components/ui/progress-card'
+import { ProjectCardWrapper } from '@/components/project-card-wrapper'
 import { prisma } from '@/lib/prisma'
 import { Project } from '@/types/project'
 
@@ -22,13 +22,9 @@ export default async function Home() {
       <h1 className="mb-8 text-4xl font-bold">Projets de l&apos;école</h1>
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {projects.map((project) => (
-          <ProgressCard 
+          <ProjectCardWrapper 
             key={project.id}
             project={project} 
-            onDonate={() => {
-              // TODO: Intégration HelloAsso
-              console.log('Donation clicked')
-            }} 
           />
         ))}
         {projects.length === 0 && (
