@@ -1,0 +1,40 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_POSTGRES_PRISMA_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id            String    @id @default(cuid())
+  username      String    @unique
+  passwordHash  String
+  createdAt     DateTime  @default(now())
+}
+
+model Project {
+  id            String    @id @default(cuid())
+  title         String
+  description   String
+  imageUrl      String?
+  targetAmount  Float
+  raisedAmount  Float     @default(0)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  isActive      Boolean   @default(true)
+  donations     Donation[]
+}
+
+model Donation {
+  id            String    @id @default(cuid())
+  amount        Float
+  donorName     String?   // Optionnel si don anonyme
+  donorEmail    String?   // Optionnel si don anonyme
+  message       String?
+  helloAssoId   String    @unique  // ID de la transaction HelloAsso
+  createdAt     DateTime  @default(now())
+  projectId     String
+  project       Project   @relation(fields: [projectId], references: [id])
+}
