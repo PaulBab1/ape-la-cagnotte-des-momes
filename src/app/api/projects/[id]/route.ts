@@ -1,6 +1,7 @@
-import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
-import { projectSchema } from '@/lib/validations/project'
+import { auth } from '@/auth'
+import { NextResponse } from 'next/server'
+import { authOptions } from '../auth/[...nextauth]/route'
 
 interface RouteParams {
   params: { id: string }
@@ -29,42 +30,46 @@ export async function GET(request: Request, { params }: RouteParams) {
   }
 }
 
-export async function PATCH(request: Request, { params }: RouteParams) {
+export async function PUT(
+  request: Request,
+  { params }: { params: { id: string } }
+) {
   try {
-    const json = await request.json()
-    const body = projectSchema.partial().parse(json)
+    const session = await auth()
+    if (!session) {
+      return new NextResponse('Non autorisé', { status: 401 })
+    }
 
+    const json = await request.json()
     const project = await prisma.project.update({
       where: { id: params.id },
-      data: body,
+      data: json,
     })
 
     return NextResponse.json(project)
   } catch (error) {
-    if (error instanceof Error) {
-      return NextResponse.json(
-        { error: error.message },
-        { status: 400 }
-      )
-    }
-    return NextResponse.json(
-      { error: 'Erreur lors de la mise à jour du projet' },
-      { status: 500 }
-    )
+    console.error('Error updating project:', error)
+    return new NextResponse('Internal Error', { status: 500 })
   }
 }
 
-export async function DELETE(request: Request, { params }: RouteParams) {
+export async function DELETE(
+  request: Request,
+  { params }: { params: { id: string } }
+) {
   try {
+    const session = await auth()
+    if (!session) {
+      return new NextResponse('Non autorisé', { status: 401 })
+    }
+
     await prisma.project.delete({
       where: { id: params.id },
     })
 
     return new NextResponse(null, { status: 204 })
   } catch (error) {
-    return NextResponse.json(
-      { error: 'Erreur lors de la suppression du projet' },
-      { status: 500 }
-    )
+    console.error('Error deleting project:', error)
+    return new NextResponse('Internal Error', { status: 500 })
   }
 }

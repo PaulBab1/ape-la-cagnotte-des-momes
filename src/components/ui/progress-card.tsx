@@ -1,11 +1,11 @@
 'use client'
 
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
-import { Progress } from '@/components/ui/progress'
-import { cn } from '@/lib/utils'
 import { Project } from '@/types/project'
 import Image from 'next/image'
 import { Button } from './button'
+import { ProgressBar } from './progress-bar'
+import { cn } from '@/lib/utils'
 
 interface ProgressCardProps {
   project: Project
@@ -17,7 +17,7 @@ export function ProgressCard({ project, className, onDonate }: ProgressCardProps
   const progress = (project.raisedAmount / project.targetAmount) * 100
 
   return (
-    <Card className={cn('overflow-hidden', className)}>
+    <Card className={cn('overflow-hidden flex flex-col [box-shadow:4px_4px_10px_rgba(0,0,0,0.1)] hover:[box-shadow:6px_6px_15px_rgba(0,0,0,0.15)] transition-shadow duration-300', className)}>
       <div className="relative aspect-video bg-slate-200">
         {project.imageUrl ? (
           <Image
@@ -49,18 +49,23 @@ export function ProgressCard({ project, className, onDonate }: ProgressCardProps
       <CardHeader>
         <CardTitle>{project.title}</CardTitle>
       </CardHeader>
-      <CardContent>
-        <p className="text-sm text-muted-foreground mb-4">{project.description}</p>
-        <div className="space-y-4">
-          <Progress value={progress} />
-          <div className="flex justify-between text-sm">
-            <span>{project.raisedAmount}€ récoltés</span>
-            <span>Objectif : {project.targetAmount}€</span>
-          </div>
+      <CardContent className="flex flex-col gap-4 flex-1">
+        <div className="min-h-[4.5rem]">
+          <p className="text-sm text-muted-foreground line-clamp-3">{project.description}</p>
         </div>
+        <ProgressBar 
+          value={project.raisedAmount}
+          max={project.targetAmount}
+          currentAmount={project.raisedAmount}
+          targetAmount={project.targetAmount}
+        />
       </CardContent>
       <CardFooter>
-        <Button onClick={onDonate} className="w-full">
+        <Button 
+          onClick={onDonate} 
+          variant="vibrant"
+          className="w-full"
+        >
           Faire un don
         </Button>
       </CardFooter>

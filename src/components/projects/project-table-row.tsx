@@ -25,7 +25,7 @@ export function ProjectTableRow({ project }: ProjectTableRowProps) {
     >
       <TableCell className="font-medium">{project.title}</TableCell>
       <TableCell>
-        <Badge variant={project.isActive ? "warning" : "secondary"}>
+        <Badge variant={project.isActive ? "success" : "secondary"}>
           {project.isActive ? "Actif" : "Inactif"}
         </Badge>
       </TableCell>

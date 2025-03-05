@@ -7,6 +7,17 @@ export const config = {
 }
 
 export function middleware(request: NextRequest) {
+  // Autoriser les méthodes HTTP nécessaires
+  if (request.method === 'OPTIONS') {
+    return new NextResponse(null, {
+      status: 200,
+      headers: {
+        'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, PATCH',
+        'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+      },
+    })
+  }
+
   // Protéger les routes /admin sauf /admin/login
   if (
     request.nextUrl.pathname.startsWith('/admin') &&

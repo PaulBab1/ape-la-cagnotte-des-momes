@@ -95,8 +95,8 @@ export function ProjectActions({ projectId, isActive }: ProjectActionsProps) {
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Annuler</AlertDialogCancel>
-            <AlertDialogAction onClick={deleteProject} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+            <AlertDialogCancel className="cursor-pointer">Annuler</AlertDialogCancel>
+            <AlertDialogAction onClick={deleteProject} className="bg-danger text-danger-foreground hover:bg-danger/90 cursor-pointer">
               Supprimer
             </AlertDialogAction>
           </AlertDialogFooter>

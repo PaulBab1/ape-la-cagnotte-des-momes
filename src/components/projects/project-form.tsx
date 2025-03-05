@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button"
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -12,48 +11,46 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
-import { Switch } from "@/components/ui/switch"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useRouter } from "next/navigation"
 import { useForm } from "react-hook-form"
-import * as z from "zod"
+import { z } from "zod"
+import { useRouter } from "next/navigation"
 import { Project } from "@prisma/client"
 
-const projectFormSchema = z.object({
-  title: z.string().min(1, "Le titre est requis"),
-  description: z.string().min(1, "La description est requise"),
-  targetAmount: z.coerce
-    .number()
-    .min(1, "L'objectif doit être supérieur à 0€"),
-  imageUrl: z.string().refine((val) => val === "" || /^https?:\/\/.+/.test(val), {
-    message: "L'URL de l'image doit être valide ou vide"
-  }),
-  isActive: z.boolean().default(false),
+const formSchema = z.object({
+  title: z.string().min(2, 'Le titre doit faire au moins 2 caractères'),
+  description: z.string().min(10, 'La description doit faire au moins 10 caractères'),
+  imageUrl: z.string().nullable(),
+  targetAmount: z.coerce.number().min(1),
+  raisedAmount: z.coerce.number().min(0),
+  isActive: z.boolean().default(true),
 })
 
-type ProjectFormValues = z.infer<typeof projectFormSchema>
+type FormValues = z.infer<typeof formSchema>
 
 interface ProjectFormProps {
   project?: Project
+  onSubmit: (data: FormValues) => Promise<void>
 }
 
-export function ProjectForm({ project }: ProjectFormProps) {
+export function ProjectForm({ project, onSubmit }: ProjectFormProps) {
   const router = useRouter()
-  const form = useForm<ProjectFormValues>({
-    resolver: zodResolver(projectFormSchema),
+  const form = useForm<FormValues>({
+    resolver: zodResolver(formSchema),
     defaultValues: {
       title: project?.title || "",
       description: project?.description || "",
-      targetAmount: project?.targetAmount || undefined,
       imageUrl: project?.imageUrl || "",
-      isActive: project?.isActive || false,
+      targetAmount: project?.targetAmount || 0,
+      raisedAmount: project?.raisedAmount || 0,
+      isActive: project?.isActive ?? true,
     },
   })
 
-  async function onSubmit(data: ProjectFormValues) {
+  async function handleSubmit(data: FormValues) {
     try {
       const response = await fetch(project ? `/api/projects/${project.id}` : "/api/projects", {
-        method: project ? "PATCH" : "POST",
+        method: project ? "PUT" : "POST",
         headers: {
           "Content-Type": "application/json",
         },
@@ -61,6 +58,8 @@ export function ProjectForm({ project }: ProjectFormProps) {
       })
 
       if (!response.ok) {
+        const error = await response.json()
+        console.error('Erreur serveur:', error)
         throw new Error(project ? "Erreur lors de la modification du projet" : "Erreur lors de la création du projet")
       }
 
@@ -73,7 +72,7 @@ export function ProjectForm({ project }: ProjectFormProps) {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+      <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-8">
         <FormField
           control={form.control}
           name="title"
@@ -96,27 +95,7 @@ export function ProjectForm({ project }: ProjectFormProps) {
               <FormLabel>Description</FormLabel>
               <FormControl>
                 <Textarea
-                  placeholder="Une journée inoubliable au Zoo de Beauval..."
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="targetAmount"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Objectif (€)</FormLabel>
-              <FormControl>
-                <Input
-                  type="number"
-                  min="0"
-                  step="0.01"
-                  placeholder="1500"
+                  placeholder="Une journée inoubliable à la découverte des animaux..."
                   {...field}
                 />
               </FormControl>
@@ -130,55 +109,53 @@ export function ProjectForm({ project }: ProjectFormProps) {
           name="imageUrl"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>URL de l&apos;image</FormLabel>
+              <FormLabel>Image (URL)</FormLabel>
               <FormControl>
                 <Input
+                  type="url"
                   placeholder="https://example.com/image.jpg"
                   {...field}
                   value={field.value || ""}
                 />
               </FormControl>
-              <FormDescription>
-                L&apos;URL d&apos;une image représentant le projet (optionnel)
-              </FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
 
-        <FormField
-          control={form.control}
-          name="isActive"
-          render={({ field }) => (
-            <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
-              <div className="space-y-0.5">
-                <FormLabel className="text-base">Activer le projet</FormLabel>
-                <FormDescription>
-                  Rendre le projet visible et permettre les dons
-                </FormDescription>
-              </div>
-              <FormControl>
-                <Switch
-                  checked={field.value}
-                  onCheckedChange={field.onChange}
-                />
-              </FormControl>
-            </FormItem>
-          )}
-        />
+        <div className="grid grid-cols-2 gap-4">
+          <FormField
+            control={form.control}
+            name="targetAmount"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Objectif (€)</FormLabel>
+                <FormControl>
+                  <Input type="number" min={1} step={1} {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-        <div className="flex justify-end gap-4">
-          <Button
-            type="button"
-            variant="outline"
-            onClick={() => router.back()}
-          >
-            Annuler
-          </Button>
-          <Button type="submit">
-            {project ? "Modifier" : "Créer"} le projet
-          </Button>
+          <FormField
+            control={form.control}
+            name="raisedAmount"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Montant récolté (€)</FormLabel>
+                <FormControl>
+                  <Input type="number" min={0} step={1} {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
         </div>
+
+        <Button type="submit">
+          {project ? 'Mettre à jour' : 'Créer le projet'}
+        </Button>
       </form>
     </Form>
   )
