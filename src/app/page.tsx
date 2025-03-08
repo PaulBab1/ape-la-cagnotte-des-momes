@@ -116,6 +116,53 @@ export default async function Home() {
         </div>
       </section>
 
+      {/* Pourquoi les dons */}
+      <section className="py-16 bg-gradient-to-br from-orange-50/50 via-pink-50/30 to-purple-50/50">
+        <div className="container mx-auto px-4 md:px-6">
+          <AnimatedSection>
+            <div className="max-w-4xl mx-auto text-center">
+              <h2 className="text-3xl font-bold mb-8 bg-gradient-to-r from-orange-600 via-pink-600 to-purple-600 text-transparent bg-clip-text">
+                Un nouveau modèle de financement
+              </h2>
+              <div className="space-y-6 text-lg text-slate-700">
+                <p>
+                  Votre engagement financier est essentiel pour enrichir l'expérience scolaire de nos enfants. 
+                  Chaque don, même modeste, contribue directement à financer les projets éducatifs et les activités qui font la richesse de notre école.
+                </p>
+                <p>
+                  Notre nouveau modèle de financement par dons directs permet d'optimiser vos contributions : 
+                  <span className="font-semibold text-pink-700"> 100% de votre don est utilisé pour les projets de l'école*</span>, 
+                  contrairement aux ventes traditionnelles où seulement 10 à 20% du montant dépensé revient à l'APE.
+                </p>
+                <p>
+                  Cette approche plus efficace nous permettra de nous concentrer sur l'essentiel : organiser des activités 
+                  enrichissantes pour les enfants, plutôt que de multiplier les actions de vente à but uniquement lucratif.
+                  Ensemble, construisons une école plus dynamique et épanouissante pour nos enfants.
+                </p>
+                <p className="text-sm text-slate-500 mt-4">
+                  * Hors contribution facultative au système <a href={HELLOASSO.WEBSITE_URL} target="_blank" rel="noopener noreferrer" className="text-pink-600 hover:text-pink-700 transition-colors">HelloAsso</a>.
+                </p>
+                <div className="mt-12">
+                  <a 
+                    href={HELLOASSO.DONATION_FORM_URL}
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="cursor-pointer inline-block"
+                  >
+                    <Button 
+                      size="lg"
+                      className="bg-pink-600 text-white hover:scale-[1.02] hover:bg-pink-700 shadow-lg transition-all duration-300 cursor-pointer font-semibold px-8 py-4 text-lg"
+                    >
+                      Je soutiens les projets de l'école
+                    </Button>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </AnimatedSection>
+        </div>
+      </section>
+
       {/* Réalisations Section */}
       {projects.some(project => project.isActive) && (
       <section className="relative py-16 scroll-mt-0 bg-gradient-to-br from-purple-50 via-pink-50 to-orange-50">
