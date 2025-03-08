@@ -20,6 +20,7 @@ async function getProjects(): Promise<Project[]> {
 
 export default async function Home() {
   const projects = await getProjects()
+  const gridProjectColumns = projects.filter(project => project.isActive).length >= 2 ? 2 : 1
 
   return (
     <main>
@@ -116,6 +117,7 @@ export default async function Home() {
       </section>
 
       {/* Réalisations Section */}
+      {projects.some(project => project.isActive) && (
       <section className="relative py-16 scroll-mt-0 bg-gradient-to-br from-purple-50 via-pink-50 to-orange-50">
         <div className="absolute inset-0 bg-[radial-gradient(#e5e7eb_1.5px,transparent_1.5px)] [background-size:16px_16px] opacity-50" />
         <div className="container mx-auto px-4 md:px-6 relative">
@@ -137,8 +139,8 @@ export default async function Home() {
             </p>
           ) : (
             <AnimatedSection delay={200}>
-              <div className="grid gap-6 md:grid-cols-2 max-w-5xl mx-auto">
-                {projects.map((project) => (
+              <div className={`grid gap-6 md:grid-cols-${gridProjectColumns} max-w-5xl mx-auto`}>
+                {projects.filter(project => project.isActive).map((project) => (
                   <ProjectCardWrapper 
                     key={project.id}
                     project={project}
@@ -150,6 +152,7 @@ export default async function Home() {
           )}
         </div>
       </section>
+      )}
 
       {/* Footer */}
       <footer className="bg-gradient-to-b from-transparent to-pink-50/50 py-8 text-center">
