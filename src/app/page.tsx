@@ -159,6 +159,15 @@ export default async function Home() {
           )}
         </div>
       </section>
+
+      {/* Footer */}
+      <footer className="bg-gradient-to-b from-transparent to-pink-50/50 py-8 text-center">
+        <p className="text-slate-600">
+          <a href="mailto:lacagnottedesmomes14310@gmail.com" className="hover:text-pink-600 transition-colors">
+            lacagnottedesmomes14310@gmail.com
+          </a>
+        </p>
+      </footer>
     </main>
   )
 }

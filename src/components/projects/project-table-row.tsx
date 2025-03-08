@@ -34,7 +34,7 @@ export function ProjectTableRow({ project }: ProjectTableRowProps) {
       <TableCell>{project._count.donations}</TableCell>
       <TableCell>{formatDate(project.createdAt)}</TableCell>
       <TableCell>
-        <ProjectActions projectId={project.id} isActive={project.isActive} />
+        <ProjectActions id={project.id} isActive={project.isActive} />
       </TableCell>
     </TableRow>
   )

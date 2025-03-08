@@ -16,17 +16,17 @@ import {
 } from "@/components/ui/alert-dialog"
 
 interface ProjectActionsProps {
-  projectId: string
+  id: string
   isActive: boolean
 }
 
-export function ProjectActions({ projectId, isActive }: ProjectActionsProps) {
+export function ProjectActions({ id, isActive }: ProjectActionsProps) {
   const router = useRouter()
 
   const toggleActive = async (e: React.MouseEvent) => {
     e.stopPropagation()
     try {
-      const response = await fetch(`/api/projects/${projectId}`, {
+      const response = await fetch(`/api/projects/${id}`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
@@ -46,7 +46,7 @@ export function ProjectActions({ projectId, isActive }: ProjectActionsProps) {
 
   const deleteProject = async () => {
     try {
-      const response = await fetch(`/api/projects/${projectId}`, {
+      const response = await fetch(`/api/projects/${id}`, {
         method: "DELETE",
       })
 

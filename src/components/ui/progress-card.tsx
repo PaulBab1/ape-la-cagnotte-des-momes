@@ -1,11 +1,13 @@
 'use client'
 
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent, CardFooter } from '@/components/ui/card'
 import { Project } from '@/types/project'
 import Image from 'next/image'
 import { Button } from './button'
 import { ProgressBar } from './progress-bar'
-import { cn } from '@/lib/utils'
+import { Badge } from './badge'
+import { PartyPopper } from 'lucide-react'
+import { cn, convertGoogleDriveUrl } from '@/lib/utils'
 
 interface ProgressCardProps {
   project: Project
@@ -15,13 +17,20 @@ interface ProgressCardProps {
 
 export function ProgressCard({ project, className, onDonate }: ProgressCardProps) {
   const progress = (project.raisedAmount / project.targetAmount) * 100
+  const imageUrl = convertGoogleDriveUrl(project.imageUrl || '')
+  const isFullyFunded = project.raisedAmount >= project.targetAmount
 
   return (
-    <Card className={cn('overflow-hidden flex flex-col [box-shadow:4px_4px_10px_rgba(0,0,0,0.1)] hover:[box-shadow:6px_6px_15px_rgba(0,0,0,0.15)] transition-shadow duration-300', className)}>
+    <Card className={cn('overflow-hidden flex flex-col [box-shadow:4px_4px_10px_rgba(0,0,0,0.1)] p-0', className)}>
+      <div className="bg-gradient-to-r from-pink-800/80 via-pink-700/50 to-pink-600/30 px-3 py-2">
+        <h3 className="text-2xl font-bold text-white drop-shadow-lg line-clamp-2 [text-shadow:_0_1px_3px_rgb(0_0_0_/_50%)]">
+          {project.title}
+        </h3>
+      </div>
       <div className="relative aspect-video bg-slate-200">
-        {project.imageUrl ? (
+        {imageUrl ? (
           <Image
-            src={project.imageUrl}
+            src={imageUrl}
             alt={project.title}
             fill
             className="object-cover"
@@ -46,29 +55,43 @@ export function ProgressCard({ project, className, onDonate }: ProgressCardProps
           </div>
         )}
       </div>
-      <CardHeader>
-        <CardTitle>{project.title}</CardTitle>
-      </CardHeader>
-      <CardContent className="flex flex-col gap-4 flex-1">
+      <CardContent className="flex flex-col gap-4 flex-1 p-4">
         <div className="min-h-[4.5rem]">
           <p className="text-sm text-muted-foreground line-clamp-3">{project.description}</p>
         </div>
-        <ProgressBar 
-          value={project.raisedAmount}
-          max={project.targetAmount}
-          currentAmount={project.raisedAmount}
-          targetAmount={project.targetAmount}
-        />
+        
+        {isFullyFunded ? (
+          <div className="flex flex-col items-center gap-2 py-2">
+            <Badge className="bg-green-500 hover:bg-green-600 text-white gap-2 px-4 py-2 text-base">
+              <PartyPopper className="w-5 h-5 -scale-x-100" />
+              Projet financé !
+              <PartyPopper className="w-5 h-5" />
+            </Badge>
+            <p className="text-sm text-green-600 font-medium">
+              {project.targetAmount.toLocaleString('fr-FR', { style: 'currency', currency: 'EUR' })} récoltés
+            </p>
+          </div>
+        ) : (
+          <ProgressBar 
+            value={project.raisedAmount}
+            max={project.targetAmount}
+            currentAmount={project.raisedAmount}
+            targetAmount={project.targetAmount}
+          />
+        )}
       </CardContent>
-      <CardFooter>
-        <Button 
-          onClick={onDonate} 
-          variant="vibrant"
-          className="w-full"
-        >
-          Faire un don
-        </Button>
-      </CardFooter>
+      
+      {!isFullyFunded && (
+        <CardFooter className="p-4">
+          <Button 
+            onClick={onDonate} 
+            variant="vibrant"
+            className="w-full"
+          >
+            Faire un don
+          </Button>
+        </CardFooter>
+      )}
     </Card>
   )
 }

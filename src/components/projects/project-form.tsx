@@ -57,16 +57,18 @@ export function ProjectForm({ project, onSubmit }: ProjectFormProps) {
         body: JSON.stringify(data),
       })
 
+      const result = await response.json()
+
       if (!response.ok) {
-        const error = await response.json()
-        console.error('Erreur serveur:', error)
-        throw new Error(project ? "Erreur lors de la modification du projet" : "Erreur lors de la création du projet")
+        console.error('Erreur serveur:', result)
+        throw new Error(result.error || "Une erreur est survenue")
       }
 
       router.push("/admin")
       router.refresh()
     } catch (error) {
       console.error("Erreur:", error)
+      // TODO: Ajouter un toast ou une notification pour l'utilisateur
     }
   }
 
