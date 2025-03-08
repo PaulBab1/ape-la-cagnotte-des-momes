@@ -5,6 +5,7 @@ import { School2, Users, HandHeart } from 'lucide-react'
 import Link from 'next/link'
 import { AnimatedSection } from '@/components/ui/animated-section'
 import { Button } from '@/components/ui/button'
+import { HELLOASSO, CONTACT } from '@/config/constants'
 
 async function getProjects(): Promise<Project[]> {
   const projects = await prisma.project.findMany({
@@ -53,7 +54,7 @@ export default async function Home() {
             éducatif stimulant pour nos élèves.
           </p>
           <a 
-            href="https://www.helloasso.com/associations/ape-la-cagnotte-des-momes/formulaires/1" 
+            href={HELLOASSO.DONATION_FORM_URL}
             target="_blank" 
             rel="noopener noreferrer"
             className="cursor-pointer"
@@ -153,8 +154,8 @@ export default async function Home() {
       {/* Footer */}
       <footer className="bg-gradient-to-b from-transparent to-pink-50/50 py-8 text-center">
         <p className="text-slate-600">
-          <a href="mailto:lacagnottedesmomes14310@gmail.com" className="hover:text-pink-600 transition-colors">
-            lacagnottedesmomes14310@gmail.com
+          <a href={`mailto:${CONTACT.EMAIL}`} className="hover:text-pink-600 transition-colors">
+            {CONTACT.EMAIL}
           </a>
         </p>
       </footer>

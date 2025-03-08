@@ -21,7 +21,7 @@ export function ProgressCard({ project, className }: ProgressCardProps) {
 
   return (
     <Card className={cn('overflow-hidden flex flex-col [box-shadow:4px_4px_10px_rgba(0,0,0,0.1)] p-0 w-full', className)}>
-      <div className="bg-gradient-to-r from-pink-800/80 via-pink-700/50 to-pink-600/30 px-3 py-2">
+      <div className="bg-pink-600 px-3 py-2">
         <h3 className="text-2xl font-bold text-white drop-shadow-lg line-clamp-2 [text-shadow:_0_1px_3px_rgb(0_0_0_/_50%)]">
           {project.title}
         </h3>
