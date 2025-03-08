@@ -13,10 +13,6 @@ export function ProjectCardWrapper({ project, className }: ProjectCardWrapperPro
     <ProgressCard 
       project={project}
       className={className}
-      onDonate={() => {
-        // TODO: Intégration HelloAsso
-        console.log('Donation clicked', project.id)
-      }}
     />
   )
 }
