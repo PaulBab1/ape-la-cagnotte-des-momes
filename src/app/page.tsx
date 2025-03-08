@@ -1,10 +1,10 @@
 import { ProjectCardWrapper } from '@/components/project-card-wrapper'
 import { prisma } from '@/lib/prisma'
 import { Project } from '@/types/project'
-import { Button } from '@/components/ui/button'
-import { HandHeart, School2, Users } from 'lucide-react'
+import { School2, Users, HandHeart } from 'lucide-react'
 import Link from 'next/link'
 import { AnimatedSection } from '@/components/ui/animated-section'
+import { Button } from '@/components/ui/button'
 
 async function getProjects(): Promise<Project[]> {
   const projects = await prisma.project.findMany({
@@ -52,9 +52,19 @@ export default async function Home() {
             L'APE la Cagnotte des Mômes de l'École d'Épinay-sur-Odon s'engage à créer un environnement 
             éducatif stimulant pour nos élèves.
           </p>
-          <Button size="lg" variant="default" className="bg-white text-slate-900 hover:bg-slate-100 shadow-lg">
-            Faire un don
-          </Button>
+          <a 
+            href="https://www.helloasso.com/associations/ape-la-cagnotte-des-momes/formulaires/1" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="cursor-pointer"
+          >
+            <Button 
+              size="lg" 
+              className="bg-pink-600 text-white hover:scale-[1.02] hover:bg-pink-700 shadow-[0_8px_16px_rgba(132,204,22,0.3)] transition-all duration-300 cursor-pointer font-semibold px-12 py-6 text-2xl"
+            >
+              Faire un don
+            </Button>
+          </a>
         </div>
       </section>
 
